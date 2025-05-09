@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rods Company</title>
+  <meta name="description" content="Rods Company - Transformando desafios em sucesso há mais de 7 anos.">
+  <meta name="keywords" content="Rods Company, Transformação, Sucesso, Desafios, Tecnologia">
+  <meta name="author" content="Rodrigo Gomes Santos">
+  <!-- Fonte condensada -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700;900&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Quicksand:wght@300..700&family=Roboto+Condensed&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #01020a;
+      position: relative;
+      height: 100vh;
+      /* Ensure body is the positioning context for absolute elements */
+      width: 100%;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* Set canvas z-index lower than overlay */
+    }
+
+    /* Style for the overlay content div */
+    #overlay-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10; /* Higher than canvas, ensures it's on top */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Center content vertically */
+      align-items: center; /* Center content horizontally */
+      color: white;
+      font-family: "IBM Plex Sans", sans-serif;
+      pointer-events: none; /* Allows clicks to pass through empty areas */
+      padding: 20px; /* Add some padding just in case */
+      box-sizing: border-box; /* Include padding in width/height */
+    }
+
+    /* Re-enable pointer events for interactive elements */
+    #overlay-content > * {
+        pointer-events: auto;
+    }
+
+    .persuasive-headline {
+      font-weight: 400;
+      font-size: clamp(24px, 5vw, 60px); /* Responsive font size */
+      margin-bottom: 8px;
+      text-align: center;
+      font-family: "Source Serif 4", serif;
+    }
+
+    .sub-headline {
+       font-weight: 400;
+       font-size: clamp(14px, 2vw, 24px);
+       color: #6b6b6b; /* Slightly muted */
+       margin-top: 0;
+
+       /* Adjust margin to position correctly above where the main text will be */
+       margin-bottom: 50vh; /* Push it up relative to the center */
+       text-align: center;
+    }
+
+    /* Note: The main text "RODS COMPANY" is still rendered by Three.js on the canvas,
+             appearing visually behind this overlay content. */
+
+    .cta-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Adjust margin to position correctly below where the main text will be */
+        margin-top: 28vh; /* Push it down relative to the center */
+    }
+
+    .cta-button {
+      display: inline-block; /* Allows padding */
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: rgb(255, 255, 255);
+      background: #f50c66; /* Example button color */
+      padding: 10px 20px;
+      border-radius: 30px;
+      text-decoration: none; /* Remove underline */
+      margin-bottom: 20px; /* Space below button */
+      transition: background 0.3s ease;
+      
+    }
+
+    .cta-button:hover {
+        background: #0056b3;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 50px; /* Space between social links */
+    }
+
+    .social-link {
+      font-weight: 300;
+      font-size: clamp(14px, 1.8vw, 20px);
+      color: #aaaaaa; /* Muted link color */
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .social-link:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+  </style>
+
+  <!-- Add the Import Map here -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+        "three/examples/jsm/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- The Three.js canvas (background effect) -->
+  <canvas id="scene"></canvas>
+
+  <!-- The overlay content -->
+  <div id="overlay-content">
+    <!-- Título principal persuasivo -->
+    <h1 class="persuasive-headline">Não é seu problema. É nosso!</h1>
+    <!-- Subtítulo adicionando contexto -->
+    <p class="sub-headline">a mais de 7 anos transformando desafios em sucesso.</p>
+
+    <!-- O texto "RODS COMPANY" virá do Three.js -->
+
+    <!-- <div class="cta-section">
+      <a href="#contact" class="cta-button">Entrar em Contato</a> 
+      <div class="social-links">
+        <a href="https://www.behance.net/rodrigomes" class="social-link">Behance</a>
+        <a href="https://www.linkedin.com/in/rodrigomesantos/" class="social-link">LinkedIn</a>
+        <a href="https://github.com/rodrigogomesantos" class="social-link">GitHub</a>
+      </div>
+    </div> -->
+  </div>
+
+  <script type="module">
+    // Now import using the bare/path specifiers defined in the import map
+    import * as THREE from 'three';
+    import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+    // --- Three.js Text Rendering Setup (Remains the same) ---
+    // This canvas is used by Three.js to create the texture
+    const textCanvas = document.createElement('canvas');
+    const ctx = textCanvas.getContext('2d');
+
+    // The text that the Three.js effect renders
+    const mainText = 'RODS COMPANY';
+
+    function resizeTextCanvas() {
+      // Use a reasonable base resolution for the text canvas to keep it sharp
+      const baseWidth = 1920; // Example base width
+      const baseHeight = 1080; // Example base height
+
+      // Scale the canvas resolution based on window size but maintain aspect ratio
+      const scale = Math.min(window.innerWidth / baseWidth, window.innerHeight / baseHeight);
+
+      textCanvas.width = baseWidth * scale;
+      textCanvas.height = baseHeight * scale;
+
+      // Use a larger font size for the texture for better detail
+      const fontSize = baseWidth * 0.12 * scale; // Scale the original font size
+
+      ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+      ctx.font = `900 ${fontSize}px 'Roboto Condensed'`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'white';
+
+      // Position the text in the center of the text canvas
+      ctx.fillText(mainText, textCanvas.width / 2, textCanvas.height / 2);
+    }
+    resizeTextCanvas(); // Initial draw
+
+    const textTexture = new THREE.CanvasTexture(textCanvas);
+    textTexture.minFilter = THREE.LinearFilter;
+    textTexture.magFilter = THREE.LinearFilter;
+    textTexture.wrapS = THREE.ClampToEdgeWrapping;
+    textTexture.wrapT = THREE.ClampToEdgeWrapping;
+
+    // Setup Three.js renderer, scene, camera
+    const scene = new THREE.Scene();
+    // Orthographic camera covers the whole screen from -1 to 1
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: document.getElementById('scene') });
+    renderer.setClearColor(0x000000, 0); // Clear with transparent background
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Post-processing composer
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      2.5, // strength (increased slightly)
+      0.8, // radius (increased slightly)
+      0.975 // threshold (increased slightly)
+    );
+    composer.addPass(bloomPass);
+
+    // Shader uniforms
+    const uniforms = {
+      time: { value: 0 },
+      resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      bars: { value: 60 }, // Number of chromatic aberration bars
+      textTex: { value: textTexture }, // The texture generated from the text canvas
+      chroma: { value: 0.002 }, // Amount of chromatic aberration (increased slightly)
+      threshold: { value: 0.1 }, // Alpha threshold for text visibility
+      fogDensity: { value: 0.1 }, // Density of the fog effect (increased)
+      fogSpeed: { value: 0.15 }, // Speed of the fog movement
+      fogScale: { value: 3.0 }, // Scale of the fog pattern (increased)
+      noiseIntensity: { value: 0.08 } // Intensity of the screen noise (increased)
+    };
+
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      transparent: true, // Allow transparency for the text/effect
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          // Simple vertex shader to pass UV coordinates
+          vUv = (position.xy * 0.5) + 0.5;
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        precision highp float; // Use high precision for floats
+        uniform float time;
+        uniform vec2 resolution;
+        uniform float bars; // Controls the number of vertical "bars" for aberration
+        uniform sampler2D textTex; // The texture containing the text
+        uniform float chroma; // Amount of chromatic displacement
+        uniform float threshold; // Alpha threshold for cutting out text
+        uniform float fogDensity; // How dense the white fog is
+        uniform float fogSpeed; // How fast the fog moves
+        uniform float fogScale; // Size of the fog noise pattern
+        uniform float noiseIntensity; // How visible the screen noise is
+        varying vec2 vUv; // UV coordinates from the vertex shader
+
+        // Simple random number generator (for noise and fog)
+        float rand(vec2 co) {
+          return fract(sin(dot(co, vec2(12.9898,78.233))) * 43758.5453);
+        }
+
+        void main() {
+          // Calculate bar index and center for the current fragment
+          float idx = floor(vUv.x * bars);
+          float center = (idx + 0.5) / bars;
+
+          // Calculate base offset based on time and bar index for animation
+          float baseOff = sin(time + idx * 0.7) * 0.02;
+
+          // Apply chromatic displacement based on the base offset and chroma uniform
+          float offR = baseOff + chroma;
+          float offG = baseOff;
+          float offB = baseOff - chroma;
+
+          // Calculate distance from the bar center
+          float d = abs(vUv.x - center);
+          // Create a smooth mask centered on the bar
+          float stripeMask = smoothstep(1.0/bars, 0.0, d);
+
+          // Sample the text texture with chromatic displacement
+          vec2 uvR = vUv + vec2(offR, 0.0);
+          vec2 uvG = vUv + vec2(offG, 0.0);
+          vec2 uvB = vUv + vec2(offB, 0.0);
+
+          // Get the red channel value (assuming text is white, so R=G=B=alpha)
+          float r = texture2D(textTex, uvR).r;
+          float g = texture2D(textTex, uvG).r;
+          float b = texture2D(textTex, uvB).r;
+
+          vec3 baseColor = vec3(r, g, b); // Combine channels into base color
+
+          // --- Fog Effect ---
+          // Time offset for fog movement
+          float fogTimeOffset = sin(time * fogSpeed) * 0.1;
+          // Create a vertical gradient mask for fog visibility, shifted by time
+          float fogVisibility = smoothstep(0.3, 0.7, vUv.y + fogTimeOffset);
+          // Add a noise pattern to the fog for texture
+          float fogPatternNoise = rand(vUv * fogScale + time * fogSpeed * 0.5);
+          // Mix the base color with white based on fog visibility, noise, and density
+          vec3 finalColor = mix(baseColor, vec3(1.0), fogVisibility * fogPatternNoise * fogDensity);
+
+          // --- Text Mask & Alpha ---
+          // Calculate text intensity (average of R, G, B - good for grayscale text)
+          const float textEdgeSmoothness = 0.08; // Controls how sharp the text edge is
+          float textValue = (r + g + b) / 3.0;
+          // Create a smoothed mask to cut out the text based on a threshold
+          float smoothedTextMask = smoothstep(threshold - textEdgeSmoothness, threshold + textEdgeSmoothness, textValue);
+
+          // Combine the stripe mask and the smoothed text mask for the final alpha
+          // The effect only appears where both the text is present AND within the bar
+          float alpha = stripeMask * smoothedTextMask;
+
+          // --- Screen Noise ---
+          // Generate per-pixel noise, scaled by resolution for aspect ratio correction
+          float screenNoise = rand(vUv * vec2(resolution.x / resolution.y, 1.0) * 3.0 + time * 0.2);
+          // Add noise to the color (centered around 0 by subtracting 0.5)
+          finalColor.rgb += vec3(screenNoise - 0.5) * noiseIntensity;
+
+          // Clamp final color and alpha to valid ranges [0, 1]
+          finalColor = clamp(finalColor, 0.0, 1.0);
+          alpha = clamp(alpha, 0.0, 1.0);
+
+          // Output the final color and alpha
+          gl_FragColor = vec4(finalColor, alpha);
+        }
+      `
+    });
+
+    // Create a plane geometry that fills the screen (using orthographic camera)
+    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), material));
+
+    // --- Parallax Effect (Applied to the Text Canvas) ---
+    window.addEventListener('mousemove', (e) => {
+      // Calculate mouse position relative to the center, scaled
+      const dx = (0.5 - e.clientX/window.innerWidth) * 20; // Sensitivity 20 pixels
+      const dy = (0.5 - e.clientY/window.innerHeight) * 20; // Sensitivity 20 pixels
+
+      // Apply a transform to the 2D canvas context
+      ctx.setTransform(1, 0, 0, 1, dx, dy); // Set transform for parallax
+
+      // Clear a slightly larger area to avoid trails from movement
+      // This clearing needs to account for the current transform and the movement
+      // A simpler approach for a full-screen canvas like this might be to clear the full textured area
+      // Let's recalculate the text based on the new transform
+      resizeTextCanvas(); // Redraw the text (this also clears)
+      // If text is centered, clearRect(0,0,w,h) before drawing takes care of most cases.
+      // Let's stick to calling resizeTextCanvas which already clears and redraws.
+
+      // We need to redraw the text at the *original* center *after* setting the transform
+      // But since resizeTextCanvas calculates based on the *current* ctx state (which includes the transform),
+      // we need to set the transform *before* clearing and drawing.
+
+      // Corrected Parallax Logic:
+      // 1. Clear the whole canvas (or slightly larger)
+      // 2. Save the default transform state
+      // 3. Apply the new parallax transform
+      // 4. Draw the text at the original center (which is now offset by the transform)
+      // 5. Restore the default transform state for the next frame
+      // Or, more simply: let resizeTextCanvas handle the core drawing, and just make sure it's called on mousemove.
+      // The current `resizeTextCanvas` clears and draws centered. Applying the transform *before* calling it works.
+
+      // Call resizeTextCanvas again which redraws with the new transform offset
+      // The previous implementation of clearing (-dx - 20, -dy - 20...) was trying to clear the offset area, which is complex.
+      // Clearing the entire textCanvas.width, textCanvas.height after setting the transform is usually sufficient.
+      // Let's refine the mousemove listener slightly.
+
+      ctx.setTransform(1, 0, 0, 1, dx, dy); // Apply transform first
+      // Redraw the text canvas. This clears the *transformed* area and redraws the text at the *transformed* center.
+      // This might cause a trail if the clear area isn't large enough relative to the movement.
+      // A more robust approach might be to clear the *entire* canvas dimensions regardless of transform.
+
+      // Let's revert the transform, clear, apply transform, draw
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+      ctx.clearRect(0, 0, textCanvas.width, textCanvas.height); // Clear the whole canvas
+      ctx.setTransform(1, 0, 0, 1, dx, dy); // Apply new transform
+      // Now redraw text at the original center (relative to the *untransformed* canvas)
+      const fontSize = textCanvas.width / (1920 * (textCanvas.width / window.innerWidth)) * 0.12 * 1920; // Recompute font size based on texture size relative to window
+      ctx.font = `900 ${fontSize}px 'Roboto Condensed'`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'white';
+      ctx.fillText(mainText, textCanvas.width / 2, textCanvas.height / 2);
+
+
+      textTexture.needsUpdate = true; // Tell Three.js the texture needs to be re-uploaded
+    });
+
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      uniforms.time.value += 0.01; // Increment time uniform for animation
+      composer.render(); // Render the scene with post-processing
+    }
+    animate();
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+      // Update text canvas and texture
+      resizeTextCanvas();
+      textTexture.needsUpdate = true;
+
+      // Update camera aspect ratio and projection matrix (though orthographic doesn't strictly need aspect)
+      // camera.left = -window.innerWidth / window.innerHeight; // If using aspect ratio scaling for Ortho
+      // camera.right = window.innerWidth / window.innerHeight;
+      // camera.top = 1;
+      // camera.bottom = -1;
+      camera.updateProjectionMatrix(); // Good practice
+
+      // Update renderer size
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Update resolution uniform in shader
+      uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+
+      // Update composer size
+      composer.setSize(window.innerWidth, window.innerHeight);
+
+      // Re-center the overlay content (flexbox handles this automatically)
+    });
+  </script>
+</body>
+</html>
