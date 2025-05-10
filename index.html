@@ -469,11 +469,21 @@
   createChat({
     webhookUrl: 'https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat',
     showWelcomeScreen: false,
-    	defaultLanguage: 'pt',
+    	defaultLanguage: 'en',
       	initialMessages: [
        	'Olá? 👋',
-            		'Me conte sobre o seu problema que eu vou te guiar de como podemos te ajudar?'
+            		'Me conte sobre o seu problema que eu vou te guiar de como podemos te ajudar!'
                 	],
+    i18n: {
+      		en: {
+          			title: 'AI Assistent',
+                			subtitle: "Nao precisa esperar, estou aqui 24/7 para te ajudar.",
+                      			footer: '',
+                            			getStarted: 'Nova conversa',
+                                  			inputPlaceholder: 'Digite aqui sua duvida...',
+                                        		},
+                                            	},
+    }
   });
 </script>
   </body>
