@@ -170,6 +170,9 @@
         }
       }
     </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" /> <!-- estilos do widget --> :contentReference[oaicite:0]{index=0}
+
   </head>
   <body>
     <!-- The Three.js canvas (background effect) -->
@@ -186,7 +189,7 @@
 
       <!-- The Three.js text ("RODS COMPANY") will appear visually in the center -->
 <div>
-  <iframe src="https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat" frameborder="0"></iframe>
+  <!-- <iframe src="https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat" frameborder="0"></iframe> -->
 </div>
       <!-- The CTA and Social Links section, positioned at the bottom -->
       <div class="cta-section">
@@ -460,5 +463,12 @@
         }, 100);
       });
     </script>
+    <script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';  /* bundle ES */
+  
+  createChat({
+    webhookUrl: 'https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat'
+  });
+</script>
   </body>
 </html>
