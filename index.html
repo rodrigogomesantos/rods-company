@@ -159,6 +159,69 @@
         color: white;
         text-decoration: underline;
       }
+
+
+
+      :root {
+        /* Fundo geral da janela de chat */
+          --chat--window--background: #01020a;
+            --chat--body--background: #01020a;
+              --chat--footer--background: #01020a;
+              
+                /* Header */
+                  --chat--header--background: #01020a;
+                    --chat--header--color: #f2f4f8;
+                    
+                      /* Borda da janela */
+                        --chat--window--border: 1px solid #20202a;
+                        
+                          /* Mensagens do bot */
+                            --chat--message--bot--background: #13131e;
+                              --chat--message--bot--color: #e0e0e0;
+                              
+                                /* Mensagens do usuário (acento rosa) */
+                                  --chat--message--user--background: #f50c66;
+                                    --chat--message--user--color: #ffffff;
+                                    
+                                      /* Campo de texto */
+                                        --chat--textarea--background: #13131e;
+                                          --chat--input--text-color: #e0e0e0;
+                                            --chat--input--placeholder--font-size: 1rem;
+                                              /* se precisar mudar a cor do placeholder: */
+                                                --chat--input--placeholder--color: #777980;
+                                                
+                                                  /* Botão de toggle (rosa translúcido) */
+                                                    --chat--toggle--background: rgba(245,12,102,0.8);
+                                                      --chat--toggle--hover--background: rgba(245,12,102,1);
+                                                        --chat--toggle--color: #ffffff;
+                                                        
+                                                          /* Para rolar discretamente */
+                                                            --chat--messages-list--padding: 0.5rem;
+                                                            
+                                                              /* Ajuste de sombras e bordas arredondadas */
+                                                                --chat--border-radius: 0.5rem;
+                                                                  --chat--toggle--size: 56px;
+                                                                  }
+
+                                                                  /* Garante que fique sobre tudo */
+                                                                  .n8n-chat-widget,
+                                                                  .n8n-chat-widget * {
+                                                                    z-index: 10000 !important;
+                                                                    }
+
+                                                                    /* Scrollbar personalizado mais discreto */
+                                                                    .n8n-chat-window .messages-list::-webkit-scrollbar {
+                                                                      width: 6px;
+                                                                      }
+                                                                      .n8n-chat-window .messages-list::-webkit-scrollbar-thumb {
+                                                                        background: rgba(255,255,255,0.1);
+                                                                          border-radius: 3px;
+                                                                          }
+
+                                                                          /* Esconde o logo padrão se quiser ainda mais clean */
+                                                                          .n8n-chat-window .header-logo {
+                                                                            display: none !important;
+                                                                            }
     </style>
 
     <!-- Add the Import Map here -->
@@ -469,21 +532,20 @@
   createChat({
     webhookUrl: 'https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat',
     showWelcomeScreen: false,
-    	defaultLanguage: 'en',
-      	initialMessages: [
+    defaultLanguage: 'en',
+    initialMessages: [
        	'Olá? 👋',
             		'Me conte sobre o seu problema que eu vou te guiar de como podemos te ajudar!'
-                	],
+    ],
     i18n: {
       		en: {
-          			title: 'AI Assistent',
-                			subtitle: "Nao precisa esperar, estou aqui 24/7 para te ajudar.",
-                      			footer: '',
-                            			getStarted: 'Nova conversa',
-                                  			inputPlaceholder: 'Digite aqui sua duvida...',
-                                        		},
-                                            	},
-    }
+          	    title: 'AI Assistent',
+                subtitle: "Nao precisa esperar, estou aqui 24/7 para te ajudar.",
+                footer: '',
+                getStarted: 'Nova conversa',
+                inputPlaceholder: 'Digite aqui sua duvida...',
+              },
+          },
   });
 </script>
   </body>
