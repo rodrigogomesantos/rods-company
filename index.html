@@ -467,7 +467,13 @@
   import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';  /* bundle ES */
   
   createChat({
-    webhookUrl: 'https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat'
+    webhookUrl: 'https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat',
+    showWelcomeScreen: false,
+    	defaultLanguage: 'pt',
+      	initialMessages: [
+       	'Olá? 👋',
+            		'Me conte sobre o seu problema que eu vou te guiar de como podemos te ajudar?'
+                	],
   });
 </script>
   </body>
