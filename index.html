@@ -1,251 +1,328 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rods Company</title>
-  <meta name="description" content="Rods Company - Transformando desafios em sucesso há mais de 7 anos.">
-  <meta name="keywords" content="Rods Company, Transformação, Sucesso, Desafios, Tecnologia">
-  <meta name="author" content="Rodrigo Gomes Santos">
-  <!-- Fontes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Quicksand:wght@300..700&family=Roboto+Condensed&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link
+    rel="icon"
+    type="image/png"
+    href="./favicon/favicon-96x96.png"
+    sizes="96x96"
+  />
+  <link rel="icon" type="image/svg+xml" href="./favicon/favicon.svg" />
+  <link rel="shortcut icon" href="./favicon/favicon.ico" />
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="./favicon/apple-touch-icon.png"
+  />
+  <link rel="manifest" href="./favicon/site.webmanifest" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rods Company</title>
 
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #01020a;
-      position: relative;
-      height: 100vh;
-      width: 100%;
-    }
+    <meta
+      name="description"
+      content="Rods Company - Transformando desafios em sucesso há mais de 7 anos."
+    />
+    <meta
+      name="keywords"
+      content="Rods Company, Transformação, Sucesso, Desafios, Tecnologia"
+    />
+    <meta name="author" content="Rodrigo Gomes Santos" />
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Quicksand:wght@300..700&family=Roboto+Condensed&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=block"
+      rel="stylesheet"
+    />
 
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #01020a;
+        position: relative;
+        height: 100vh;
+        width: 100%;
+      }
 
-    /* Style for the overlay content div */
-    #overlay-content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      display: flex; /* Keep flexbox for main layout */
-      flex-direction: column; /* Stack children vertically */
-      align-items: center; /* Center children horizontally */
-      /* Remove justify-content: center; */ /* Don't center the whole block vertically */
-      color: white;
-      font-family: "IBM Plex Sans", sans-serif;
-      pointer-events: none; /* Allow clicks to pass through empty space */
-      padding: 20px; /* Add padding to edges */
-      padding-top: 8rem;
-      box-sizing: border-box;
-    }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
 
-    /* Re-enable pointer events for interactive elements */
-    #overlay-content > * {
+      #scene,
+      #overlay-content {
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      /* Style for the overlay content div */
+      #overlay-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        display: flex; /* Keep flexbox for main layout */
+        flex-direction: column; /* Stack children vertically */
+        align-items: center; /* Center children horizontally */
+        /* Remove justify-content: center; */ /* Don't center the whole block vertically */
+        color: white;
+        font-family: 'IBM Plex Sans', sans-serif;
+        pointer-events: none; /* Allow clicks to pass through empty space */
+        padding: 20px; /* Add padding to edges */
+        padding-top: 8rem;
+        box-sizing: border-box;
+      }
+
+      /* Re-enable pointer events for interactive elements */
+      #overlay-content > * {
         pointer-events: auto;
-    }
+      }
 
-    .persuasive-headline {
-      font-weight: 400;
-      font-size: clamp(24px, 5vw, 60px);
-      margin-bottom: 8px;
-      text-align: center;
-      font-family: "Source Serif 4", serif;
-      margin-top: 0; /* Start from the top padding */
-      /* Remove large margin-bottom */
-    }
+      .persuasive-headline {
+        font-weight: 400;
+        font-size: clamp(24px, 5vw, 60px);
+        margin-bottom: 8px;
+        text-align: center;
+        font-family: 'Source Serif 4', serif;
+        margin-top: 0; /* Start from the top padding */
+        /* Remove large margin-bottom */
+      }
 
-    .sub-headline {
-       font-weight: 400;
-       font-size: clamp(14px, 2vw, 24px);
-       color: #6b6b6b;
-       margin-top: 0;
-       /* Remove large margin-bottom */
-       /* Adjust margin based on desired spacing relative to the Three.js text */
-       margin-bottom: 25vh; /* Example: position it visually above center */
-       text-align: center;
-    }
+      .sub-headline {
+        font-weight: 400;
+        font-size: clamp(14px, 2vw, 24px);
+        color: #6b6b6b;
+        margin-top: 0;
+        /* Remove large margin-bottom */
+        /* Adjust margin based on desired spacing relative to the Three.js text */
+        margin-bottom: 25vh; /* Example: position it visually above center */
+        text-align: center;
+      }
 
-    /* The main text "RODS COMPANY" is still rendered by Three.js */
+      /* The main text "RODS COMPANY" is still rendered by Three.js */
 
-    /* Style for the bottom content container (CTA and Social Links) */
-    .cta-section {
+      /* Style for the bottom content container (CTA and Social Links) */
+      .cta-section {
         position: absolute; /* Position relative to #overlay-content */
-        bottom: 4rem;      /* Anchor 20px from the bottom */
-        left: 0;           /* Align to the left edge */
-        width: 100%;       /* Span the full width */
-        display: flex;     /* Use flexbox to arrange its content */
+        bottom: 4rem; /* Anchor 20px from the bottom */
+        left: 0; /* Align to the left edge */
+        width: 100%; /* Span the full width */
+        display: flex; /* Use flexbox to arrange its content */
         flex-direction: column; /* Stack button and links vertically */
         align-items: center; /* Center button and links horizontally within this full-width container */
         /* Remove margin-top */
         pointer-events: auto; /* Ensure this whole section is clickable */
-    }
+      }
 
-    .cta-button {
-      display: inline-block;
-      font-weight: 400;
-      text-transform: uppercase;
-      font-size: clamp(16px, 2.5vw, 20px);
-      color: rgb(255, 255, 255);
-      background: #f50c66;
-      padding: 10px 20px;
-      border-radius: 30px;
-      text-decoration: none;
-      margin-bottom: 15px; /* Space between button and links */
-      transition: background 0.3s ease;
-      /* Remove float/positioning relative to text, centered by parent flexbox */
-    }
+      .cta-button {
+        display: inline-block;
+        font-weight: 400;
+        text-transform: uppercase;
+        font-size: clamp(16px, 2.5vw, 20px);
+        color: rgb(255, 255, 255);
+        background: #f50c66;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        margin-bottom: 15px; /* Space between button and links */
+        transition: background 0.3s ease;
+        /* Remove float/positioning relative to text, centered by parent flexbox */
+      }
 
-    .cta-button:hover {
+      .cta-button:hover {
         background: #e00a5a; /* Slightly darker on hover */
-    }
+      }
 
-    .social-links {
-      display: flex; /* Arrange links horizontally */
-      gap: 50px; /* Space between social links */
-      /* Centered by parent .cta-section's align-items: center */
-    }
+      .social-links {
+        display: flex; /* Arrange links horizontally */
+        gap: 50px; /* Space between social links */
+        /* Centered by parent .cta-section's align-items: center */
+      }
 
-    .social-link {
-      font-weight: 300;
-      font-size: clamp(14px, 1.8vw, 15px);
-      color: #aaaaaa;
-      text-decoration: none;
-      transition: color 0.3s ease, text-decoration 0.3s ease;
-    }
+      .social-link {
+        font-weight: 300;
+        font-size: clamp(14px, 1.8vw, 15px);
+        color: #aaaaaa;
+        text-decoration: none;
+        transition: color 0.3s ease, text-decoration 0.3s ease;
+      }
 
-    .social-link:hover {
+      .social-link:hover {
         color: white;
         text-decoration: underline;
-    }
-
-  </style>
-
-  <!-- Add the Import Map here -->
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
-        "three/examples/jsm/": "https://unpkg.com/three@0.150.1/examples/jsm/"
       }
-    }
-  </script>
-</head>
-<body>
-  <!-- The Three.js canvas (background effect) -->
-  <canvas id="scene"></canvas>
+    </style>
 
-  <!-- The overlay content -->
-  <div id="overlay-content">
-    <!-- Título principal persuasivo -->
-    <h1 class="persuasive-headline">Não é seu problema. É nosso!</h1>
-    <!-- Subtítulo adicionando contexto -->
-    <p class="sub-headline">Há mais de 7 anos transformando desafios em sucesso.</p>
+    <!-- Add the Import Map here -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- The Three.js canvas (background effect) -->
+    <canvas id="scene"></canvas>
 
-    <!-- The Three.js text ("RODS COMPANY") will appear visually in the center -->
+    <!-- The overlay content -->
+    <div id="overlay-content">
+      <!-- Título principal persuasivo -->
+      <h1 class="persuasive-headline">Não é seu problema. É nosso!</h1>
+      <!-- Subtítulo adicionando contexto -->
+      <p class="sub-headline">
+        Há mais de 7 anos transformando desafios em sucesso.
+      </p>
 
-    <!-- The CTA and Social Links section, positioned at the bottom -->
-    <div class="cta-section">
-      <!-- <a href="#contact" class="cta-button">Entrar em Contato</a> -->
-      <div class="social-links">
-        <a href="https://www.behance.net/rodrigomes" class="social-link" target="_blank" rel="noopener noreferrer">Behance</a> <!-- Added target and rel -->
-        <a href="https://www.linkedin.com/in/rodrigomesantos/" class="social-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://github.com/rodrigogomesantos" class="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <!-- The Three.js text ("RODS COMPANY") will appear visually in the center -->
+<div>
+  <iframe src="https://n8n.rods.company/webhook/091b2c03-2114-4d13-b308-a1bf725c33d0/chat" frameborder="0"></iframe>
+</div>
+      <!-- The CTA and Social Links section, positioned at the bottom -->
+      <div class="cta-section">
+        <!-- <a href="#contact" class="cta-button">Entrar em Contato</a> -->
+        <div class="social-links">
+          <a
+            href="https://www.behance.net/rodrigomes"
+            class="social-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Behance</a
+          >
+          <!-- Added target and rel -->
+          <a
+            href="https://www.linkedin.com/in/rodrigomesantos/"
+            class="social-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+          <a
+            href="https://github.com/rodrigogomesantos"
+            class="social-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div>
       </div>
     </div>
-  </div>
 
-  <script type="module">
-    // Now import using the bare/path specifiers defined in the import map
-    import * as THREE from 'three';
-    import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-    import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+    <script type="module">
+      // Now import using the bare/path specifiers defined in the import map
+      import * as THREE from 'three';
+      import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+      import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+      import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-    // --- Three.js Text Rendering Setup ---
-    const textCanvas = document.createElement('canvas');
-    const ctx = textCanvas.getContext('2d');
-    const mainText = 'RODS COMPANY'; // Text rendered by Three.js
+      // --- Three.js Text Rendering Setup ---
+      const textCanvas = document.createElement('canvas');
+      const ctx = textCanvas.getContext('2d');
+      const mainText = 'RODS COMPANY'; // Text rendered by Three.js
 
-    function resizeTextCanvas() {
-      const baseWidth = 1920;
-      const baseHeight = 1080;
-      const scale = Math.min(window.innerWidth / baseWidth, window.innerHeight / baseHeight);
+      function updateBars() {
+        const w = window.innerWidth;
+        let bars;
+        if (w < 480) {
+          bars = 20;
+        } else if (w < 768) {
+          bars = 40;
+        } else {
+          bars = 60;
+        }
+        uniforms.bars.value = bars;
+      }
 
-      textCanvas.width = baseWidth * scale;
-      textCanvas.height = baseHeight * scale;
 
-      const fontSize = baseWidth * 0.12 * scale;
-      ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
-      // Use 'Roboto Condensed' for the main Three.js text effect as before
-      ctx.font = `900 ${fontSize}px 'Roboto Condensed'`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
-      ctx.fillText(mainText, textCanvas.width / 2, textCanvas.height / 2);
-    }
-    resizeTextCanvas(); // Initial draw
 
-    const textTexture = new THREE.CanvasTexture(textCanvas);
-    textTexture.minFilter = THREE.LinearFilter;
-    textTexture.magFilter = THREE.LinearFilter;
-    textTexture.wrapS = THREE.ClampToEdgeWrapping;
-    textTexture.wrapT = THREE.ClampToEdgeWrapping;
 
-    // Setup Three.js renderer, scene, camera
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: document.getElementById('scene') });
-    renderer.setClearColor(0x000000, 0);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+      function resizeTextCanvas() {
+        const baseWidth = 1920;
+        const baseHeight = 1080;
+        const scale = Math.min(
+          window.innerWidth / baseWidth,
+          window.innerHeight / baseHeight
+        );
 
-    // Post-processing composer
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      2.5, // strength
-      0.8, // radius
-      0.975 // threshold
-    );
-    composer.addPass(bloomPass);
+        textCanvas.width = baseWidth * scale;
+        textCanvas.height = baseHeight * scale;
 
-    // Shader uniforms
-    const uniforms = {
-      time: { value: 0 },
-      resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-      bars: { value: 60 },
-      textTex: { value: textTexture },
-      chroma: { value: 0.002 },
-      threshold: { value: 0.1 },
-      fogDensity: { value: 0.1 },
-      fogSpeed: { value: 0.15 },
-      fogScale: { value: 3.0 },
-      noiseIntensity: { value: 0.08 }
-    };
+        const fontSize = baseWidth * 0.12 * scale;
+        ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+        // Use 'Roboto Condensed' for the main Three.js text effect as before
+        ctx.font = `900 ${fontSize}px 'Roboto Condensed'`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'white';
+        ctx.fillText(mainText, textCanvas.width / 2, textCanvas.height / 2);
+      }
+      resizeTextCanvas(); // Initial draw
 
-    const material = new THREE.ShaderMaterial({
-      uniforms,
-      transparent: true,
-      vertexShader: `
+      const textTexture = new THREE.CanvasTexture(textCanvas);
+      textTexture.minFilter = THREE.LinearFilter;
+      textTexture.magFilter = THREE.LinearFilter;
+      textTexture.wrapS = THREE.ClampToEdgeWrapping;
+      textTexture.wrapT = THREE.ClampToEdgeWrapping;
+
+      // Setup Three.js renderer, scene, camera
+      const scene = new THREE.Scene();
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        canvas: document.getElementById('scene'),
+      });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Post-processing composer
+      const composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        2.5, // strength
+        0.8, // radius
+        0.975 // threshold
+      );
+      composer.addPass(bloomPass);
+
+      // Shader uniforms
+      const uniforms = {
+        time: { value: 0 },
+        resolution: {
+          value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+        },
+        bars: { value: 60 },
+        textTex: { value: textTexture },
+        chroma: { value: 0.001 },
+        threshold: { value: 0.1 },
+        fogDensity: { value: 0.1 },
+        fogSpeed: { value: 0.15 },
+        fogScale: { value: 3.0 },
+        noiseIntensity: { value: 0.18 },
+      };
+
+      const material = new THREE.ShaderMaterial({
+        uniforms,
+        transparent: true,
+        vertexShader: `
         varying vec2 vUv;
         void main() {
           vUv = (position.xy * 0.5) + 0.5;
           gl_Position = vec4(position, 1.0);
         }
       `,
-      fragmentShader: `
+        fragmentShader: `
         precision highp float;
         uniform float time;
         uniform vec2 resolution;
@@ -305,61 +382,83 @@
 
           gl_FragColor = vec4(finalColor, alpha);
         }
-      `
-    });
+      `,
+      });
 
-    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), material));
+      scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
 
-    // --- Parallax Effect (Applied to the Text Canvas) ---
-    window.addEventListener('mousemove', (e) => {
-      const dx = (0.5 - e.clientX/window.innerWidth) * 20; // Sensitivity 20 pixels
-      const dy = (0.5 - e.clientY/window.innerHeight) * 20; // Sensitivity 20 pixels
+      // --- Parallax Effect (Applied to the Text Canvas) ---
+      window.addEventListener('mousemove', (e) => {
+        const dx = (0.5 - e.clientX / window.innerWidth) * 20; // Sensitivity 20 pixels
+        const dy = (0.5 - e.clientY / window.innerHeight) * 20; // Sensitivity 20 pixels
 
-      // Reset transform, clear, apply new transform, draw
-      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
-      ctx.clearRect(0, 0, textCanvas.width, textCanvas.height); // Clear the whole canvas
-      ctx.setTransform(1, 0, 0, 1, dx, dy); // Apply new transform
+        // Reset transform, clear, apply new transform, draw
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+        ctx.clearRect(0, 0, textCanvas.width, textCanvas.height); // Clear the whole canvas
+        ctx.setTransform(1, 0, 0, 1, dx, dy); // Apply new transform
 
-      // Recompute font size based on texture size relative to window for drawing accuracy
-      const baseWidth = 1920;
-      const scale = textCanvas.width / baseWidth; // Get the scale factor used in resizeTextCanvas
-      const fontSize = baseWidth * 0.12 * scale; // Recompute font size
+        // Recompute font size based on texture size relative to window for drawing accuracy
+        const baseWidth = 1920;
+        const scale = textCanvas.width / baseWidth; // Get the scale factor used in resizeTextCanvas
+        const fontSize = baseWidth * 0.12 * scale; // Recompute font size
 
-      ctx.font = `900 ${fontSize}px 'Roboto Condensed'`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
-      ctx.fillText(mainText, textCanvas.width / 2, textCanvas.height / 2); // Draw at the *original* center
+        ctx.font = `900 ${fontSize}px 'Roboto Condensed'`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'white';
+        ctx.fillText(mainText, textCanvas.width / 2, textCanvas.height / 2); // Draw at the *original* center
 
-      textTexture.needsUpdate = true; // Tell Three.js the texture needs to be re-uploaded
-    });
+        textTexture.needsUpdate = true; // Tell Three.js the texture needs to be re-uploaded
+      });
+          // No evento resize, junto com o resto
+      window.addEventListener('resize', () => {
+        resizeTextCanvas();
+        textTexture.needsUpdate = true;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+
+        // aqui:
+        updateBars();
+      });
+
+            // No início, antes do animate()
+      updateBars();
 
 
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-      uniforms.time.value += 0.01;
-      composer.render();
-    }
-    animate();
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        uniforms.time.value += 0.01;
+        composer.render();
+      }
+      animate();
 
-    // Handle window resizing
-    window.addEventListener('resize', () => {
-      // Update text canvas and texture
-      resizeTextCanvas();
-      textTexture.needsUpdate = true;
+      // Handle window resizing
+      window.addEventListener('resize', () => {
+        // Update text canvas and texture
+        resizeTextCanvas();
+        textTexture.needsUpdate = true;
 
-      // Update renderer size
-      renderer.setSize(window.innerWidth, window.innerHeight);
+        // Update renderer size
+        renderer.setSize(window.innerWidth, window.innerHeight);
 
-      // Update resolution uniform in shader
-      uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        // Update resolution uniform in shader
+        uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
 
-      // Update composer size
-      composer.setSize(window.innerWidth, window.innerHeight);
+        // Update composer size
+        composer.setSize(window.innerWidth, window.innerHeight);
 
-      // Flexbox and absolute positioning handle overlay content re-layout automatically
-    });
-  </script>
-</body>
+        // Flexbox and absolute positioning handle overlay content re-layout automatically
+      });
+
+      window.addEventListener('load', () => {
+        // dá um pequeno delay para garantir que tudo esteja pronto
+        setTimeout(() => {
+          document.getElementById('scene').style.opacity = '1';
+          document.getElementById('overlay-content').style.opacity = '1';
+        }, 100);
+      });
+    </script>
+  </body>
 </html>
